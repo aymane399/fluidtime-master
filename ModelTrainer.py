@@ -30,16 +30,20 @@ class ModelTrainer(object):
         start_time = time.time()
         for step in tqdm(range(0, num_iterations)):
             targets, contexts, times, labels = self.dataiter.get_batch()
-            feed_dict = {
-                targets_placeholder: targets,
-                contexts_placeholder: contexts,
-                times_placeholder: times,
-                labels_placeholder: labels,
-            }
-            _, loss_value = self.sess.run([train_op, loss],
-                                     feed_dict=feed_dict)
+            if len(targets) == batch_size:
+                feed_dict = {
+                    targets_placeholder: targets,
+                    contexts_placeholder: contexts,
+                    times_placeholder: times,
+                    labels_placeholder: labels,
+                }
+                _, loss_value = self.sess.run([train_op, loss],
+                                         feed_dict=feed_dict)
 
-            duration = time.time() - start_time
+                duration = time.time() - start_time
 
-            if step % num_iter_per_epoch == 0:
-                print('Step %d: loss = %.4f (%.3f sec)' % (step, loss_value, duration))
+                if step % num_iter_per_epoch == 0:
+                    print('Step %d: loss = %.4f (%.3f sec)' % (step, loss_value, duration))
+            else :
+                print('out of data')
+                break

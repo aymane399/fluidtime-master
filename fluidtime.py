@@ -30,7 +30,12 @@ def cos(A,B):
 
 dataiter = DumbIterator(batch_size, vocab_size)
 
-with tf.Session() as sess:
+
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+
+with tf.Session(config=config) as sess:
+
     model = DiffTime(vocab_size)
     trainer = ModelTrainer(sess, dataiter, model)
     trainer.train_model(batch_size, num_iterations, num_iter_per_epoch)
